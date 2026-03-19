@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ink Novels — Arabic Translation Studio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Naskh+Arabic:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="hero card">
+        <div>
+          <p class="eyebrow">AI translation workflow for novels</p>
+          <h1>Ink Novels Arabic Translation Studio</h1>
+          <p class="hero-copy">
+            Turn large chapters into translation-ready chunks, lock your glossary,
+            and generate high-accuracy prompts for Arabic output without breaking
+            pacing, names, or tone.
+          </p>
+        </div>
+        <div class="hero-metrics">
+          <div>
+            <span>Focus</span>
+            <strong>Accuracy + Speed</strong>
+          </div>
+          <div>
+            <span>Built for</span>
+            <strong>Long-form fiction</strong>
+          </div>
+          <div>
+            <span>Output</span>
+            <strong dir="rtl" lang="ar">العربية الفصحى</strong>
+          </div>
+        </div>
+      </header>
+
+      <main class="workspace">
+        <section class="card controls">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">1. Source material</p>
+              <h2>Paste chapter text</h2>
+            </div>
+            <button id="demoButton" class="secondary-button" type="button">
+              Load demo excerpt
+            </button>
+          </div>
+          <label class="field">
+            <span>Novel text</span>
+            <textarea id="sourceText" rows="14" placeholder="Paste a chapter, scene, or batch of paragraphs here..."></textarea>
+          </label>
+          <div class="grid two-up compact">
+            <label class="field">
+              <span>Book / project name</span>
+              <input id="projectName" type="text" value="Ink Novels Project" />
+            </label>
+            <label class="field">
+              <span>Target Arabic style</span>
+              <select id="stylePreset">
+                <option value="Modern Standard Arabic for commercial fiction">Modern Standard Arabic for commercial fiction</option>
+                <option value="Elegant literary Arabic with natural dialogue">Elegant literary Arabic with natural dialogue</option>
+                <option value="Young adult Arabic with accessible phrasing">Young adult Arabic with accessible phrasing</option>
+              </select>
+            </label>
+          </div>
+        </section>
+
+        <section class="card controls">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">2. Consistency controls</p>
+              <h2>Protect terminology, names, and tone</h2>
+            </div>
+          </div>
+          <div class="grid two-up">
+            <label class="field">
+              <span>Glossary (one term per line: English = Arabic)</span>
+              <textarea id="glossaryText" rows="10" placeholder="Silver Keep = الحصن الفضي&#10;Aether = الأثير&#10;Warden = الحارس"></textarea>
+            </label>
+            <div class="stack gap-md">
+              <label class="field">
+                <span>Translation rules</span>
+                <textarea id="rulesText" rows="10" placeholder="Preserve chapter pacing.&#10;Do not summarize.&#10;Keep honorifics consistent.&#10;Translate metaphors naturally, not literally."></textarea>
+              </label>
+              <div class="toggle-grid">
+                <label><input id="preserveNames" type="checkbox" checked /> Preserve character names</label>
+                <label><input id="preserveFormatting" type="checkbox" checked /> Preserve paragraph breaks</label>
+                <label><input id="showArabicQuotes" type="checkbox" checked /> Use Arabic quotation marks when natural</label>
+                <label><input id="doQaPass" type="checkbox" checked /> Include QA pass checklist</label>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="card controls">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">3. Throughput settings</p>
+              <h2>Balance speed vs. context</h2>
+            </div>
+          </div>
+          <div class="grid three-up">
+            <label class="field">
+              <span>Max chunk size (characters)</span>
+              <input id="chunkSize" type="number" min="800" max="12000" step="100" value="3200" />
+            </label>
+            <label class="field">
+              <span>Overlap lines between chunks</span>
+              <input id="overlapLines" type="number" min="0" max="8" step="1" value="1" />
+            </label>
+            <label class="field">
+              <span>Estimated model speed (chars/min)</span>
+              <input id="throughput" type="number" min="500" max="50000" step="100" value="9000" />
+            </label>
+          </div>
+        </section>
+
+        <section class="stats-grid">
+          <article class="card stat">
+            <span>Total characters</span>
+            <strong id="totalChars">0</strong>
+          </article>
+          <article class="card stat">
+            <span>Paragraph-aware chunks</span>
+            <strong id="chunkCount">0</strong>
+          </article>
+          <article class="card stat">
+            <span>Glossary entries</span>
+            <strong id="glossaryCount">0</strong>
+          </article>
+          <article class="card stat">
+            <span>Estimated batch time</span>
+            <strong id="estimatedTime">0 min</strong>
+          </article>
+        </section>
+
+        <section class="grid split-layout">
+          <article class="card panel">
+            <div class="section-heading slim">
+              <div>
+                <p class="eyebrow">Preview</p>
+                <h2>Chunk plan</h2>
+              </div>
+              <button id="downloadChunks" class="secondary-button" type="button">
+                Export JSON
+              </button>
+            </div>
+            <div id="chunkPreview" class="chunk-preview empty-state">
+              Add source text to generate chunks.
+            </div>
+          </article>
+
+          <article class="card panel">
+            <div class="section-heading slim">
+              <div>
+                <p class="eyebrow">Prompt engineering</p>
+                <h2>High-accuracy translation prompt</h2>
+              </div>
+              <button id="copyPrompt" class="primary-button" type="button">
+                Copy prompt
+              </button>
+            </div>
+            <pre id="promptPreview" class="prompt-preview"></pre>
+          </article>
+        </section>
+
+        <section class="grid split-layout">
+          <article class="card panel">
+            <div class="section-heading slim">
+              <div>
+                <p class="eyebrow">Why this structure works</p>
+                <h2>Accuracy workflow</h2>
+              </div>
+            </div>
+            <ol class="workflow-list">
+              <li>Chunk by paragraph boundaries so dramatic beats and dialogue stay intact.</li>
+              <li>Inject a glossary every time so names, places, ranks, and magic terms remain consistent.</li>
+              <li>Use explicit non-summarization rules to preserve nuance and author voice.</li>
+              <li>Run a QA pass to catch mistranslations, dropped lines, and punctuation drift.</li>
+            </ol>
+          </article>
+
+          <article class="card panel arabic-panel">
+            <div class="section-heading slim">
+              <div>
+                <p class="eyebrow">Target quality bar</p>
+                <h2 dir="rtl" lang="ar">إرشادات الترجمة العربية</h2>
+              </div>
+            </div>
+            <p dir="rtl" lang="ar" class="arabic-copy">
+              الترجمة الجيدة للروايات لا تعتمد فقط على صحة المعنى، بل على الإيقاع،
+              وسلاسة الحوار، وثبات المصطلحات، والمحافظة على الجو الأدبي للمشهد.
+            </p>
+          </article>
+        </section>
+      </main>
+    </div>
+
+    <template id="chunkCardTemplate">
+      <article class="chunk-card">
+        <div class="chunk-card-header">
+          <strong></strong>
+          <span></span>
+        </div>
+        <p></p>
+      </article>
+    </template>
+
+    <script src="app.js"></script>
+  </body>
+</html>
