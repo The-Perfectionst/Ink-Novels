@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ink Novels — Story Bible</title>
+    <meta
+      name="description"
+      content="A polished, mobile-friendly story bible for webnovels with chapter ingestion, automatic extraction, cross-linked lore, and a relationship graph."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="ambient ambient-one"></div>
+    <div class="ambient ambient-two"></div>
+    <div class="page-shell">
+      <aside class="sidebar" id="sidebar">
+        <div>
+          <div class="brand">
+            <div class="brand-mark">✦</div>
+            <div>
+              <p class="eyebrow">Lore Workspace</p>
+              <h1>Story Bible</h1>
+            </div>
+          </div>
+
+          <nav class="sidebar-nav">
+            <a href="#overview">Overview</a>
+            <a href="#ingest">Ingest Chapters</a>
+            <a href="#graph">Connections</a>
+            <a href="#chapters">Chapters</a>
+            <a href="#characters">Characters</a>
+            <a href="#locations">Locations</a>
+            <a href="#organizations">Organizations</a>
+            <a href="#systems">Systems</a>
+            <a href="#artifacts">Artifacts</a>
+            <a href="#timeline">Timeline</a>
+          </nav>
+        </div>
+
+        <div class="sidebar-footer glass-card">
+          <p class="tiny-label">Publishing</p>
+          <p>
+            Static-site friendly and ready for free hosting on GitHub Pages, Netlify, or
+            Cloudflare Pages.
+          </p>
+        </div>
+      </aside>
+
+      <main class="main-content">
+        <header class="hero glass-card" id="overview">
+          <button class="menu-button" id="menuButton" aria-label="Open navigation">☰</button>
+          <div class="hero-copy">
+            <p class="eyebrow">Interconnected worldbuilding hub</p>
+            <h2>Feed chapters in. Watch the webnovel bible build itself.</h2>
+            <p class="hero-text">
+              Paste each chapter, let the app extract recurring people, places, groups,
+              artifacts, and story beats, then explore everything through linked cards,
+              timelines, and a living relationship graph.
+            </p>
+            <div class="hero-actions">
+              <a class="button primary" href="#ingest">Start ingesting chapters</a>
+              <button class="button secondary" id="loadDemoButton">Load demo data</button>
+            </div>
+          </div>
+          <div class="hero-highlight glass-card">
+            <p class="tiny-label">What gets tracked</p>
+            <ul>
+              <li>Character profiles and chapter appearances</li>
+              <li>Locations, factions, and named objects</li>
+              <li>Relationship strength by co-occurrence</li>
+              <li>Timeline-ready event summaries</li>
+              <li>Rules, systems, and train mechanics</li>
+            </ul>
+          </div>
+        </header>
+
+        <section class="stats-grid">
+          <article class="stat-card glass-card">
+            <span class="tiny-label">Chapters</span>
+            <strong id="chapterCount">0</strong>
+          </article>
+          <article class="stat-card glass-card">
+            <span class="tiny-label">Entities</span>
+            <strong id="entityCount">0</strong>
+          </article>
+          <article class="stat-card glass-card">
+            <span class="tiny-label">Connections</span>
+            <strong id="relationshipCount">0</strong>
+          </article>
+          <article class="stat-card glass-card">
+            <span class="tiny-label">Timeline beats</span>
+            <strong id="eventCount">0</strong>
+          </article>
+        </section>
+
+        <section class="panel glass-card" id="chapters">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">Reading log</p>
+              <h3>Chapter dossiers</h3>
+            </div>
+            <span class="badge badge-soft">Curated + extracted</span>
+          </div>
+          <div id="chapterCards" class="chapter-grid empty-state">Chapter entries will appear here.</div>
+        </section>
+
+        <section class="workspace-grid" id="ingest">
+          <article class="panel glass-card composer-panel">
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">Chapter ingestion</p>
+                <h3>Add the next chapter</h3>
+              </div>
+              <span class="badge">Auto extraction</span>
+            </div>
+
+            <form id="chapterForm" class="chapter-form">
+              <div class="field-row">
+                <label>
+                  <span>Chapter title</span>
+                  <input type="text" id="chapterTitle" placeholder="Chapter 12 — Moonlit Market" required />
+                </label>
+                <label>
+                  <span>Arc / volume</span>
+                  <input type="text" id="chapterArc" placeholder="Volume 1 — Ashen Dawn" />
+                </label>
+              </div>
+              <label>
+                <span>Chapter text</span>
+                <textarea
+                  id="chapterText"
+                  rows="12"
+                  placeholder="Paste the full chapter here. The extractor will look for named characters, places, organizations, artifacts, and major event sentences."
+                  required
+                ></textarea>
+              </label>
+              <div class="form-actions">
+                <button class="button primary" type="submit">Extract into the bible</button>
+                <button class="button ghost" type="button" id="exportButton">Export JSON</button>
+                <label class="button ghost file-button">
+                  Import JSON
+                  <input type="file" id="importInput" accept="application/json" />
+                </label>
+                <button class="button ghost" type="button" id="resetButton">Reset</button>
+              </div>
+            </form>
+          </article>
+
+          <article class="panel glass-card extraction-panel">
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">Latest extraction</p>
+                <h3>What the app found</h3>
+              </div>
+              <span class="badge badge-soft">Heuristic engine</span>
+            </div>
+            <div id="latestExtraction" class="empty-state">
+              Add a chapter to see extracted entities, linked notes, and event candidates.
+            </div>
+          </article>
+        </section>
+
+        <section class="panel glass-card graph-panel" id="graph">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">Relationship graph</p>
+              <h3>See how everything connects</h3>
+            </div>
+            <span class="badge">Interactive map</span>
+          </div>
+          <p class="section-copy">
+            Connections strengthen whenever two entities appear in the same sentence or event.
+            Tap a node to highlight its immediate worldbuilding neighborhood.
+          </p>
+          <div class="graph-legend">
+            <span><i class="legend-dot legend-character"></i>Character</span>
+            <span><i class="legend-dot legend-location"></i>Location</span>
+            <span><i class="legend-dot legend-organization"></i>Organization</span>
+            <span><i class="legend-dot legend-system"></i>System</span>
+            <span><i class="legend-dot legend-artifact"></i>Artifact</span>
+            <span><i class="legend-dot legend-term"></i>Term</span>
+          </div>
+          <div id="graphCanvas" class="graph-canvas"></div>
+        </section>
+
+        <section class="library-grid">
+          <article class="panel glass-card" id="characters">
+            <div class="panel-heading compact">
+              <div>
+                <p class="eyebrow">People</p>
+                <h3>Characters</h3>
+              </div>
+            </div>
+            <div id="charactersList" class="entity-list empty-state">No characters yet.</div>
+          </article>
+
+          <article class="panel glass-card" id="locations">
+            <div class="panel-heading compact">
+              <div>
+                <p class="eyebrow">Places</p>
+                <h3>Locations</h3>
+              </div>
+            </div>
+            <div id="locationsList" class="entity-list empty-state">No locations yet.</div>
+          </article>
+
+          <article class="panel glass-card" id="organizations">
+            <div class="panel-heading compact">
+              <div>
+                <p class="eyebrow">Power structures</p>
+                <h3>Organizations</h3>
+              </div>
+            </div>
+            <div id="organizationsList" class="entity-list empty-state">No organizations yet.</div>
+          </article>
+
+          <article class="panel glass-card" id="systems">
+            <div class="panel-heading compact">
+              <div>
+                <p class="eyebrow">Mechanics</p>
+                <h3>Rules & systems</h3>
+              </div>
+            </div>
+            <div id="systemsList" class="entity-list empty-state">No systems yet.</div>
+          </article>
+
+          <article class="panel glass-card" id="artifacts">
+            <div class="panel-heading compact">
+              <div>
+                <p class="eyebrow">Objects of interest</p>
+                <h3>Artifacts & terms</h3>
+              </div>
+            </div>
+            <div id="artifactsList" class="entity-list empty-state">No artifacts or terms yet.</div>
+          </article>
+        </section>
+
+        <section class="panel glass-card" id="timeline">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">Chronology</p>
+              <h3>Timeline beats</h3>
+            </div>
+            <span class="badge badge-soft">Chapter ordered</span>
+          </div>
+          <div id="timelineList" class="timeline empty-state">No timeline entries yet.</div>
+        </section>
+      </main>
+    </div>
+
+    <template id="entityCardTemplate">
+      <article class="entity-card">
+        <div class="entity-card-top">
+          <div>
+            <p class="entity-type"></p>
+            <h4 class="entity-name"></h4>
+          </div>
+          <span class="entity-frequency"></span>
+        </div>
+        <p class="entity-summary"></p>
+        <div class="tag-row"></div>
+      </article>
+    </template>
+
+    <script src="script.js"></script>
+  </body>
+</html>
